@@ -18,11 +18,27 @@ import org.apereo.cas.services.ServicesManager;
 
 public class LdapAuthenticationHandler extends AbstractUsernamePasswordAuthenticationHandler {
 
-	private final UsernamePasswordValidator ldapPasswordValidator;
+	private final LDAPPasswordValidator ldapPasswordValidator;
 
 	public LdapAuthenticationHandler(String name, ServicesManager servicesManager, PrincipalFactory principalFactory) {
 		super(name, servicesManager, principalFactory, Integer.MAX_VALUE);
 		ldapPasswordValidator = new LDAPPasswordValidator();
+	}
+
+	public void setLdapProviderURL(final String ldapProviderURL) {
+		this.ldapPasswordValidator.setLdapProviderURL(ldapProviderURL);
+	}
+
+	public void setLdapStartTLS(final boolean ldapStartTLS) {
+		this.ldapPasswordValidator.setLdapStartTLS(ldapStartTLS);
+	}
+
+	public void setLdapUserDC(final String ldapUserDC) {
+		this.ldapPasswordValidator.setLdapUserDC(ldapUserDC);
+	}
+
+	public void setLdapGroupsDC(final String ldapGroupsDC) {
+		this.ldapPasswordValidator.setLdapGroupsDC(ldapGroupsDC);
 	}
 
 	@Override

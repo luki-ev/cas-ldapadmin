@@ -45,10 +45,30 @@ public class AuthEventExecutionPlanConfiguration implements AuthenticationEventE
 	 	final String name = "LDAP Authentication";
 	 	final AuthenticationProperties authenticationProperties = casProperties.getAuthn();
 	 	final List<LdapAuthenticationProperties> ldapPropertiesList = authenticationProperties.getLdap();
+	 	final LdapAuthenticationProperties ldapAuthenticationProperties = ldapPropertiesList.get(0);
 	 	
-	    final ServicesManager serviceManagerObject = servicesManager.getObject();
+	 	final String ldapUrl = ldapAuthenticationProperties.getLdapUrl();
+	 	System.out.println("====> ldap-url: " + ldapUrl);
+
+	 	final String ldapBaseDN = ldapAuthenticationProperties.getBaseDn();
+	 	System.out.println("====> base-dn: " + ldapBaseDN);
+	 	
+	 	final String ldapBindDN = ldapAuthenticationProperties.getBindDn();
+	 	System.out.println("====> bind-dn: " + ldapBindDN);
+	 	
+	 	final String ldapBindPw = ldapAuthenticationProperties.getBindCredential();
+	 	System.out.println("====> bind-credential: " + ldapBindPw);
+	 	
+	 	final boolean ldapStartTLS = ldapAuthenticationProperties.isUseStartTls();
+	 	System.out.println("====> use-start-tls: " + ldapStartTLS);
+	 	
+	 	final ServicesManager serviceManagerObject = servicesManager.getObject();
 		final PrincipalFactory ldapAuthenticationPrincipalFactory = ldapAuthenticationPrincipalFactory();
-		final AuthenticationHandler authenticationHandler = new LdapAuthenticationHandler(name, serviceManagerObject, ldapAuthenticationPrincipalFactory);
+		final LdapAuthenticationHandler authenticationHandler = new LdapAuthenticationHandler(name, serviceManagerObject, ldapAuthenticationPrincipalFactory);
+		authenticationHandler.setLdapProviderURL(ldapUrl);
+		authenticationHandler.setLdapStartTLS(ldapStartTLS);
+		authenticationHandler.setLdapUserDC("uid={user},ou=users," + ldapBaseDN);
+		authenticationHandler.setLdapGroupsDC("ou=groups," + ldapBaseDN);
         return authenticationHandler;
 	    }
 	
