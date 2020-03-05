@@ -34,11 +34,16 @@ public class LdapAuthenticationHandler extends AbstractUsernamePasswordAuthentic
 	}
 
 	public void setLdapUserDC(final String ldapUserDC) {
-		this.ldapPasswordValidator.setLdapUserDC(ldapUserDC);
+		this.ldapPasswordValidator.setLdapUsersDC(ldapUserDC);
 	}
 
 	public void setLdapGroupsDC(final String ldapGroupsDC) {
 		this.ldapPasswordValidator.setLdapGroupsDC(ldapGroupsDC);
+	}
+
+	public void setLdapBindCredentials(final String ldapBindUser, final String ldapBindPassword) {
+		this.ldapPasswordValidator.setLdapBindUser(ldapBindUser);
+		this.ldapPasswordValidator.setLdapBindPassword(ldapBindPassword);
 	}
 
 	@Override
@@ -50,20 +55,17 @@ public class LdapAuthenticationHandler extends AbstractUsernamePasswordAuthentic
 			if (!ldapPasswordValidator.isAuthenticated(username, password)) {
 				throw new FailedLoginException("login failed");
 			}
+			final Map<String, String> accountAttributes = ldapPasswordValidator.accountAttributes(username);
+			final Map<String, Object> attribsMap = new HashMap<String, Object>();
+			for (String key : accountAttributes.keySet()) {
+				attribsMap.put(key, accountAttributes.get(key));
+			}
+			final Map<String, List<Object>> attributes = CoreAuthenticationUtils.convertAttributeValuesToMultiValuedObjects(attribsMap);
+			final Principal principal = this.principalFactory.createPrincipal(username, attributes);
+			return createHandlerResult(credential, principal);
 		} catch (PasswordValidationException e) {
 			throw new FailedLoginException(e.getMessage());
 		}
-		final Map<String, Object> attribsMap = new HashMap<String, Object>();
-		if (username.startsWith("hsh00-")) {
-			attribsMap.put("groups", username.substring(6) + ", member");
-		} else {
-			if (username.length() >= 5) {
-				attribsMap.put("groups", username.substring(0, 5) + ", " + username.substring(0, 3));
-			}
-		}
-		final Map<String, List<Object>> attributes = CoreAuthenticationUtils.convertAttributeValuesToMultiValuedObjects(attribsMap);
-		final Principal principal = this.principalFactory.createPrincipal(username, attributes);
-		return createHandlerResult(credential, principal);
 	}
 	
 }
