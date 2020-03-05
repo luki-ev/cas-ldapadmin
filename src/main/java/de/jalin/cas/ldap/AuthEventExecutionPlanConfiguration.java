@@ -67,7 +67,7 @@ public class AuthEventExecutionPlanConfiguration implements AuthenticationEventE
 		final LdapAuthenticationHandler authenticationHandler = new LdapAuthenticationHandler(name, serviceManagerObject, ldapAuthenticationPrincipalFactory);
 		authenticationHandler.setLdapProviderURL(ldapUrl);
 		authenticationHandler.setLdapStartTLS(ldapStartTLS);
-		authenticationHandler.setLdapUserDC("uid={user},ou=users," + ldapBaseDN);
+		authenticationHandler.setLdapUserDC("ou=users," + ldapBaseDN);
 		authenticationHandler.setLdapGroupsDC("ou=groups," + ldapBaseDN);
 		authenticationHandler.setLdapBindCredentials(ldapBindDN, ldapBindPw);
         return authenticationHandler;
