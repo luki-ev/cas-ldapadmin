@@ -88,6 +88,9 @@ public class LDAPPasswordValidator implements UsernamePasswordValidator {
 	@Override
 	public boolean isAuthenticated(final String user, final String passwd) throws PasswordValidationException {
 		try {
+			if (user.equals(user.toLowerCase())) {
+				return false;
+			}
 			final InitialLdapContext ctx = initializeContext();
 			String principal = "uid=" + user +  "," + getLdapUsersDC();
 			ctx.addToEnvironment(Context.SECURITY_PRINCIPAL, principal);

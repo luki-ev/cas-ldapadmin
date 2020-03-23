@@ -49,7 +49,7 @@ public class LdapAuthenticationHandler extends AbstractUsernamePasswordAuthentic
 	@Override
 	protected AuthenticationHandlerExecutionResult authenticateUsernamePasswordInternal(UsernamePasswordCredential credential, String originalPassword)
 			throws GeneralSecurityException, PreventedException {
-		final String username = credential.getUsername();
+		final String username = credential.getUsername().toLowerCase();
 		final String password = credential.getPassword();
 		try {
 			if (!ldapPasswordValidator.isAuthenticated(username, password)) {
