@@ -123,7 +123,7 @@ public class LDAPPasswordValidator implements UsernamePasswordValidator {
             	final String nodeName = node.getName();
             	if (nodeName != null && nodeName.startsWith("cn=")) {
             		if (listOfGroups.length() > 0) {
-            			listOfGroups.append(", ");
+            			listOfGroups.append(",");
             		}
             		listOfGroups.append(nodeName.substring(3));
             	}
@@ -136,7 +136,7 @@ public class LDAPPasswordValidator implements UsernamePasswordValidator {
             	final String nodeName = node.getName();
             	if (nodeName != null && nodeName.startsWith("cn=")) {
             		if (listOfGroups.length() > 0) {
-            			listOfGroups.append(", ");
+            			listOfGroups.append(",");
             		}
             		listOfGroups.append(nodeName.substring(3));
             	}
