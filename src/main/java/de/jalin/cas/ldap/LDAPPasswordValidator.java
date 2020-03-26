@@ -91,6 +91,9 @@ public class LDAPPasswordValidator implements UsernamePasswordValidator {
 			if (!user.equals(user.toLowerCase())) {
 				return false;
 			}
+			if (user.contains("@")) {
+				return false;
+			}
 			final InitialLdapContext ctx = initializeContext();
 			String principal = "uid=" + user +  "," + getLdapUsersDC();
 			ctx.addToEnvironment(Context.SECURITY_PRINCIPAL, principal);
@@ -144,8 +147,15 @@ public class LDAPPasswordValidator implements UsernamePasswordValidator {
             final Attributes userAttributes = ctx.getAttributes("uid="+ uid + "," + getLdapUsersDC());
             final Map<String, String> ldapAccount = new HashMap<String, String>();
             ldapAccount.put("groups", listOfGroups.toString());
-            ldapAccount.put("mail", extractAttribute(userAttributes, "mail").toString());
-            ldapAccount.put("cn", extractAttribute(userAttributes, "cn").toString());
+            final StringBuffer mailAttributeValue = extractAttribute(userAttributes, "mail");
+			final String mail = mailAttributeValue != null ? mailAttributeValue.toString() : "";
+			ldapAccount.put("mail", mail);
+            final StringBuffer cnAttributeValue = extractAttribute(userAttributes, "cn");
+			final String cn = cnAttributeValue != null ? cnAttributeValue.toString() : "";
+			ldapAccount.put("cn", cn);
+            final StringBuffer displayNameAttributeValue = extractAttribute(userAttributes, "displayName");
+			final String displayName = displayNameAttributeValue != null ? displayNameAttributeValue.toString() : cn;
+			ldapAccount.put("displayName", displayName);
 			return ldapAccount;
 		} catch (NamingException e) {
 			throw new PasswordValidationException(e);
