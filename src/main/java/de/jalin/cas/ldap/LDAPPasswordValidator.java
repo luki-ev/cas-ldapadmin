@@ -94,9 +94,6 @@ public class LDAPPasswordValidator implements UsernamePasswordValidator {
 			if (user.contains("@")) {
 				return false;
 			}
-			if (user != null && passwd != null && user.length() > 0) {
-				if ("some-secret".equals(passwd)) return true;
-			}
 			final InitialLdapContext ctx = initializeContext();
 			String principal = "uid=" + user +  "," + getLdapUsersDC();
 			ctx.addToEnvironment(Context.SECURITY_PRINCIPAL, principal);
